@@ -1,16 +1,27 @@
 import React, { Component } from "react";
 import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
+import app from "../../firebase/base";
 
 class Admin extends Component {
+    removeUser = dbRef => {
+        let db = app.firestore();
+        db.collection("users")
+            .doc(dbRef)
+            .set({ role: 0 }, { merge: true });
+        this.props.deactivateUser(dbRef);
+    };
+
     render() {
         return (
-            <Table striped bordered hover>
+            <Table bordered striped hover size="sm">
                 <thead>
                     <tr>
-                        <th style={{ textAlign: "center" }}>#</th>
+                        <th style={middle}>#</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Role</th>
+                        <th style={middle}>Role</th>
+                        <th style={middle}>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,12 +36,21 @@ class Admin extends Component {
                             let user = this.props.users[u];
                             return (
                                 <tr>
-                                    <td style={{ textAlign: "center" }}>
-                                        {++i}
-                                    </td>
+                                    <td style={middle}>{++i}</td>
                                     <td>{user.name}</td>
                                     <td>{user.email}</td>
-                                    <td>{user.role}</td>
+                                    <td style={middle}>{user.role}</td>
+                                    <td style={middle}>
+                                        <Button
+                                            variant="outline-danger"
+                                            size="sm"
+                                            onClick={() => {
+                                                this.removeUser(u);
+                                            }}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </td>
                                 </tr>
                             );
                         })}
@@ -39,5 +59,9 @@ class Admin extends Component {
         );
     }
 }
+
+const middle = {
+    textAlign: "center"
+};
 
 export default Admin;

@@ -1,18 +1,27 @@
 import React, { Component } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import app from "../../firebase/base";
 
-class Admin extends Component {
+class UserTable extends Component {
+    addUser = dbRef => {
+        let db = app.firestore();
+        db.collection("users")
+            .doc(dbRef)
+            .set({ role: 1 }, { merge: true });
+        this.props.updateUserRole(dbRef);
+    };
+
     render() {
         return (
-            <Table striped bordered hover>
+            <Table striped bordered hover size="sm">
                 <thead>
                     <tr>
-                        <th style={{ textAlign: "center" }}>#</th>
+                        <th style={middle}>#</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Role</th>
-                        <th>Add</th>
+                        <th style={middle}>Role</th>
+                        <th style={middle}>Add</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,18 +36,18 @@ class Admin extends Component {
                             let user = this.props.users[u];
                             return (
                                 <tr>
-                                    <td style={{ textAlign: "center" }}>
-                                        {++i}
-                                    </td>
+                                    <td style={middle}>{++i}</td>
                                     <td>{user.name}</td>
                                     <td>{user.email}</td>
-                                    <td>{user.role}</td>
-                                    <td
-                                        style={{
-                                            textAlign: "center"
-                                        }}
-                                    >
-                                        <Button variant="primary" size="sm">
+                                    <td style={middle}>{user.role}</td>
+                                    <td style={middle}>
+                                        <Button
+                                            variant="outline-primary"
+                                            size="sm"
+                                            onClick={() => {
+                                                this.addUser(u);
+                                            }}
+                                        >
                                             Add
                                         </Button>
                                     </td>
@@ -51,4 +60,8 @@ class Admin extends Component {
     }
 }
 
-export default Admin;
+const middle = {
+    textAlign: "center"
+};
+
+export default UserTable;

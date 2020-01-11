@@ -46,6 +46,12 @@ class Home extends Component {
                     });
                 }
             });
+        // let user = app.auth().currentUser;
+        // user.updateProfile({
+        //     role: 1
+        // }).then(() => {
+        //     console.log(app.auth().currentUser);
+        // });
     };
 
     render() {

@@ -37,6 +37,18 @@ class Admin extends Component {
         this.setState({ memberTab: !this.state.memberTab });
     };
 
+    updateUserRole = dbRef => {
+        let temp = this.state.users;
+        temp[dbRef].role = 1;
+        this.setState({ users: temp });
+    };
+
+    deactivateUser = dbRef => {
+        let temp = this.state.users;
+        temp[dbRef].role = 0;
+        this.setState({ users: temp });
+    };
+
     render() {
         if (this.state.loading) {
             return (
@@ -76,12 +88,18 @@ class Admin extends Component {
                     {this.state.memberTab ? (
                         <div style={{ marginTop: "1em" }}>
                             <h4>Current Members</h4>
-                            <MemberTable users={this.state.users} />
+                            <MemberTable
+                                users={this.state.users}
+                                deactivateUser={this.deactivateUser}
+                            />
                         </div>
                     ) : (
                         <div style={{ marginTop: "1em" }}>
                             <h4>Members Requests</h4>
-                            <UserTable users={this.state.users} />
+                            <UserTable
+                                users={this.state.users}
+                                updateUserRole={this.updateUserRole}
+                            />
                         </div>
                     )}
                 </Container>
